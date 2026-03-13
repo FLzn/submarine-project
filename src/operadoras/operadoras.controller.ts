@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OperadorasService } from './operadoras.service';
-import { Operadora } from './operadora.entity';
+import { CreateOperadoraDto, UpdateOperadoraDto } from './operadora.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -29,12 +29,12 @@ export class OperadorasController {
   }
 
   @Post()
-  create(@Body() body: Partial<Operadora>) {
+  create(@Body() body: CreateOperadoraDto) {
     return this.service.create(body);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<Operadora>) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateOperadoraDto) {
     return this.service.update(id, body);
   }
 

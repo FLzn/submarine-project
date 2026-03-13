@@ -8,7 +8,9 @@ import { Campanha } from './campanhas/campanha.entity';
 import { Operadora } from './operadoras/operadora.entity';
 import { User } from './users/user.entity';
 import { SmsLog } from './sms-logs/sms-log.entity';
+import { SmsReply } from './sms-replies/sms-reply.entity';
 import { SmsLogsModule } from './sms-logs/sms-logs.module';
+import { SmsRepliesModule } from './sms-replies/sms-replies.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { CampanhasModule } from './campanhas/campanhas.module';
 import { OperadorasModule } from './operadoras/operadoras.module';
@@ -29,7 +31,7 @@ import { AuthModule } from './auth/auth.module';
         username: config.get('DB_USER'),
         password: config.get('DB_PASS'),
         database: config.get('DB_NAME'),
-        entities: [Cliente, Campanha, Operadora, User, SmsLog],
+        entities: [Cliente, Campanha, Operadora, User, SmsLog, SmsReply],
         synchronize: false,
         extra: {
           max: 10,
@@ -42,6 +44,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     SmsModule,
     SmsLogsModule,
+    SmsRepliesModule,
     AuthModule,
   ],
   controllers: [AppController],

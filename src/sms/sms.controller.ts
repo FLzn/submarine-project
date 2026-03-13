@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { SmsService } from './sms.service';
 
 @Controller('sms')
@@ -15,5 +15,10 @@ export class SmsController {
     if (!message) throw new BadRequestException('message é obrigatório');
     if (!token) throw new BadRequestException('token é obrigatório');
     return this.service.sendSingle({ phoneNumber, message, token });
+  }
+
+  @Post('callback')
+  callback(@Body() payload: Record<string, any>) {
+    return this.service.handleCallback(payload as any);
   }
 }

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CampanhasService } from './campanhas.service';
-import { Campanha } from './campanha.entity';
+import { CreateCampanhaDto, UpdateCampanhaDto } from './campanha.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -29,12 +29,12 @@ export class CampanhasController {
   }
 
   @Post()
-  create(@Body() body: Partial<Campanha>) {
+  create(@Body() body: CreateCampanhaDto) {
     return this.service.create(body);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<Campanha>) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateCampanhaDto) {
     return this.service.update(id, body);
   }
 

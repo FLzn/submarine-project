@@ -41,6 +41,9 @@ export class UsersService {
 
   async update(id: number, data: Partial<User>) {
     await this.findOne(id);
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
     await this.repo.update(id, data);
     return this.findOne(id);
   }

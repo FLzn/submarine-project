@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
-import { Cliente } from './cliente.entity';
+import { CreateClienteDto, UpdateClienteDto } from './cliente.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -29,12 +29,12 @@ export class ClientesController {
   }
 
   @Post()
-  create(@Body() body: Partial<Cliente>) {
+  create(@Body() body: CreateClienteDto) {
     return this.service.create(body);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<Cliente>) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateClienteDto) {
     return this.service.update(id, body);
   }
 

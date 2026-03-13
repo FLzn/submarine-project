@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Campanha } from '../campanhas/campanha.entity';
 
@@ -37,4 +38,7 @@ export class SmsLog {
 
   @CreateDateColumn()
   sent_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
