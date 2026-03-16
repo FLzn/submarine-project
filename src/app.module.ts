@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Cliente } from './clientes/cliente.entity';
@@ -9,6 +10,7 @@ import { Operadora } from './operadoras/operadora.entity';
 import { User } from './users/user.entity';
 import { SmsLog } from './sms-logs/sms-log.entity';
 import { SmsReply } from './sms-replies/sms-reply.entity';
+import { Preferencia } from './preferencias/preferencia.entity';
 import { SmsLogsModule } from './sms-logs/sms-logs.module';
 import { SmsRepliesModule } from './sms-replies/sms-replies.module';
 import { ClientesModule } from './clientes/clientes.module';
@@ -17,10 +19,13 @@ import { OperadorasModule } from './operadoras/operadoras.module';
 import { UsersModule } from './users/users.module';
 import { SmsModule } from './sms/sms.module';
 import { AuthModule } from './auth/auth.module';
+import { PreferenciasModule } from './preferencias/preferencias.module';
+import { RelatoriosModule } from './relatorios/relatorios.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -31,8 +36,10 @@ import { AuthModule } from './auth/auth.module';
         username: config.get('DB_USER'),
         password: config.get('DB_PASS'),
         database: config.get('DB_NAME'),
-        entities: [Cliente, Campanha, Operadora, User, SmsLog, SmsReply],
+        entities: [Cliente, Campanha, Operadora, User, SmsLog, SmsReply, Preferencia],
         synchronize: false,
+        retryAttempts: 10,
+        retryDelay: 3000,
         extra: {
           max: 10,
         },
@@ -46,6 +53,8 @@ import { AuthModule } from './auth/auth.module';
     SmsLogsModule,
     SmsRepliesModule,
     AuthModule,
+    PreferenciasModule,
+    RelatoriosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
