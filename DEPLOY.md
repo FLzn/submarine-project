@@ -62,8 +62,13 @@ apt-get install -y \
   libxdamage1 \
   libxfixes3 \
   libxrandr2 \
-  libgbm1 \
-  libasound2
+  libgbm1
+
+# Ubuntu 24.04+
+apt-get install -y libasound2t64
+
+# Ubuntu 22.04 ou anterior (se o comando acima falhar)
+# apt-get install -y libasound2
 ```
 
 ---
