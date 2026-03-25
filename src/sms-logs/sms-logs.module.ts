@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SmsLog } from './sms-log.entity';
+import { SmsReply } from '../sms-replies/sms-reply.entity';
 import { SmsLogsService } from './sms-logs.service';
 import { SmsLogsController } from './sms-logs.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SmsLog])],
+  imports: [TypeOrmModule.forFeature([SmsLog, SmsReply])],
   controllers: [SmsLogsController],
   providers: [SmsLogsService],
   exports: [SmsLogsService],

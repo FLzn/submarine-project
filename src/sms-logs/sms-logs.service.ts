@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsLog } from './sms-log.entity';
+import { SmsReply } from '../sms-replies/sms-reply.entity';
 
 type Filters = {
   startDate?: string;
@@ -29,6 +30,8 @@ export class SmsLogsService {
   constructor(
     @InjectRepository(SmsLog)
     private readonly repo: Repository<SmsLog>,
+    @InjectRepository(SmsReply)
+    private readonly replyRepo: Repository<SmsReply>,
   ) {}
 
   create(data: Partial<SmsLog>) {
@@ -127,12 +130,33 @@ export class SmsLogsService {
     this.applyFilters(qb, filters);
 
     const raw = await qb.getRawOne();
+
+    const replyQb = this.replyRepo
+      .createQueryBuilder('reply')
+      .innerJoin('sms_logs', 'log', 'log.id = reply.sms_log_id')
+      .innerJoin('campanhas', 'campanha', 'campanha.id = log.campanha_id')
+      .select('COUNT(reply.id)', 'total_replies')
+      .addSelect(
+        'SUM(CAST(campanha.valor_sms AS NUMERIC))',
+        'valor_total_replies',
+      );
+
+    const start = parseDate(filters.startDate);
+    const end = parseDate(filters.endDate);
+    if (start && end) {
+      replyQb.where('reply.received_at BETWEEN :start AND :end', { start, end });
+    }
+
+    const replyRaw = await replyQb.getRawOne();
+
     return {
       total: Number(raw?.total ?? 0),
       total_delivered: Number(raw?.total_delivered ?? 0),
       total_pending: Number(raw?.total_pending ?? 0),
       total_error: Number(raw?.total_error ?? 0),
       valor_total: Number(raw?.valor_total ?? 0),
+      total_replies: Number(replyRaw?.total_replies ?? 0),
+      valor_total_replies: Number(replyRaw?.valor_total_replies ?? 0),
     };
   }
 }

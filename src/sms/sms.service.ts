@@ -21,7 +21,7 @@ export class SmsService {
     private readonly smsLogsService: SmsLogsService,
     private readonly smsRepliesService: SmsRepliesService,
   ) {}
-
+ 
   async sendSingle(payload: SingleSmsPayload) {
     try {
       const [operadora, campanha] = await Promise.all([
@@ -78,11 +78,7 @@ export class SmsService {
     if (payload.type === 'api_reply') {
       const replies: any[] = payload.replies ?? [];
 
-      // Busca os sms_log_ids correspondentes aos messageIds recebidos
-      const messageIds = replies
-        .map((r) => r.messageId)
-        .filter(Boolean);
-
+      const messageIds = replies.map((r) => r.messageId).filter(Boolean);
       const logIdMap = await this.smsLogsService.findLogIdsByPontalIds(messageIds);
 
       await this.smsRepliesService.createFromCallback(replies, logIdMap);
