@@ -80,7 +80,8 @@ function generateBarChart(
 
       const label = d.data
         ? (() => {
-            const [, m, day] = String(d.data).slice(0, 10).split('-');
+            const iso = (d.data instanceof Date ? d.data.toISOString() : String(d.data)).slice(0, 10);
+            const [, m, day] = iso.split('-');
             return `${day}/${m}`;
           })()
         : '';
