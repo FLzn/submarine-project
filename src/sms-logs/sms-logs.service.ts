@@ -19,9 +19,11 @@ const SUCCESS_STATUSES = [3, 5];
 // Códigos que indicam pendente/em trânsito
 const PENDING_STATUSES = [0, 1, 2, 99];
 
-function parseDate(value: string | undefined): Date | null {
+function parseDate(value: string | undefined, endOfDay = false): Date | null {
   if (!value) return null;
-  const d = new Date(value);
+  const datePart = value.substring(0, 10);
+  const suffix = endOfDay ? 'T23:59:59.999-03:00' : 'T00:00:00-03:00';
+  const d = new Date(datePart + suffix);
   return isNaN(d.getTime()) ? null : d;
 }
 
@@ -59,7 +61,7 @@ export class SmsLogsService {
 
   private applyFilters(qb: any, filters: Filters) {
     const start = parseDate(filters.startDate);
-    const end = parseDate(filters.endDate);
+    const end = parseDate(filters.endDate, true);
     if (start && end) {
       qb.andWhere('log.sent_at BETWEEN :start AND :end', { start, end });
     }
@@ -142,7 +144,7 @@ export class SmsLogsService {
       );
 
     const start = parseDate(filters.startDate);
-    const end = parseDate(filters.endDate);
+    const end = parseDate(filters.endDate, true);
     if (start && end) {
       replyQb.where('reply.received_at BETWEEN :start AND :end', { start, end });
     }
