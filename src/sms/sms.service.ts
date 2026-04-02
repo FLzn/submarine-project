@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import axios from 'axios';
 import { OperadorasService } from '../operadoras/operadoras.service';
 import { CampanhasService } from '../campanhas/campanhas.service';
@@ -29,6 +30,8 @@ export class SmsService {
         this.campanhasService.findByToken(payload.token),
       ]);
 
+      const reference = randomUUID();
+
       const response = await axios.post(
         operadora.endpoint_sms,
         {
@@ -39,6 +42,7 @@ export class SmsService {
               message: payload.message,
               account: campanha.cliente.code,
               urlCallback: `${process.env.APP_URL}/sms/callback`,
+              reference,
             },
           ],
         },
@@ -62,6 +66,7 @@ export class SmsService {
         status: result.status,
         status_description: result.statusDescription,
         pontal_id: result.id,
+        reference,
       });
 
       return result;
@@ -78,8 +83,8 @@ export class SmsService {
     if (payload.type === 'api_reply') {
       const replies: any[] = payload.replies ?? [];
 
-      const messageIds = replies.map((r) => r.messageId).filter(Boolean);
-      const logIdMap = await this.smsLogsService.findLogIdsByPontalIds(messageIds);
+      const references = replies.map((r) => r.reference).filter(Boolean);
+      const logIdMap = await this.smsLogsService.findLogIdsByReferences(references);
 
       await this.smsRepliesService.createFromCallback(replies, logIdMap);
     } else {

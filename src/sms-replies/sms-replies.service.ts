@@ -14,7 +14,7 @@ export class SmsRepliesService {
     const entities = replies.map((r) =>
       this.repo.create({
         message_id: r.messageId,
-        sms_log_id: smsLogIdByMessageId.get(r.messageId) ?? undefined,
+        sms_log_id: smsLogIdByMessageId.get(r.reference) ?? undefined,
         reference: r.reference ?? undefined,
         message: r.message,
         from_number: String(r.from),
@@ -33,6 +33,9 @@ export class SmsRepliesService {
   ) {
     const qb = this.repo
       .createQueryBuilder('reply')
+      .leftJoinAndSelect('reply.sms_log', 'sms_log')
+      .leftJoinAndSelect('sms_log.campanha', 'campanha')
+      .leftJoinAndSelect('campanha.cliente', 'cliente')
       .orderBy('reply.received_at', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);

@@ -2,8 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { SmsLog } from '../sms-logs/sms-log.entity';
 
 @Entity('sms_replies')
 export class SmsReply {
@@ -12,6 +15,10 @@ export class SmsReply {
 
   @Column({ nullable: true })
   sms_log_id: number;
+
+  @ManyToOne(() => SmsLog, { nullable: true, eager: false })
+  @JoinColumn({ name: 'sms_log_id' })
+  sms_log: SmsLog;
 
   @Column()
   message_id: string;

@@ -36,6 +36,9 @@ export class SmsLog {
   @Column({ nullable: true })
   pontal_id: string;
 
+  @Column({ nullable: true })
+  reference: string;
+
   @CreateDateColumn()
   sent_at: Date;
 

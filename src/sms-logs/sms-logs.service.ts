@@ -50,6 +50,16 @@ export class SmsLogsService {
     return new Map(logs.map((l) => [l.pontal_id, l.id]));
   }
 
+  async findLogIdsByReferences(references: string[]): Promise<Map<string, number>> {
+    if (!references.length) return new Map();
+    const logs = await this.repo
+      .createQueryBuilder('log')
+      .select(['log.id', 'log.reference'])
+      .where('log.reference IN (:...references)', { references })
+      .getMany();
+    return new Map(logs.map((l) => [l.reference, l.id]));
+  }
+
   async updateByPontalId(
     pontalId: string,
     data: { status: number; status_description: string },
