@@ -60,6 +60,10 @@ export class SmsLogsService {
     return new Map(logs.map((l) => [l.reference, l.id]));
   }
 
+  async updateById(id: number, data: { status: number; status_description?: string }) {
+    await this.repo.update(id, data);
+  }
+
   async updateByPontalId(
     pontalId: string,
     data: { status: number; status_description: string },

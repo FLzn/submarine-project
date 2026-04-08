@@ -21,6 +21,7 @@ import { SmsModule } from './sms/sms.module';
 import { AuthModule } from './auth/auth.module';
 import { PreferenciasModule } from './preferencias/preferencias.module';
 import { RelatoriosModule } from './relatorios/relatorios.module';
+import { ShortcodeModule } from './providers/shortcode/shortcode.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { RelatoriosModule } from './relatorios/relatorios.module';
     AuthModule,
     PreferenciasModule,
     RelatoriosModule,
+    ShortcodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
